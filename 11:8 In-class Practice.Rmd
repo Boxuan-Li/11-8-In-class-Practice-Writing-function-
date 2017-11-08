@@ -4,7 +4,7 @@ author: "Boxuan Li"
 date: "11/8/2017"
 output: html_document
 ---
-## loading packages
+### loading packages
 ```{r}
 library(tidyverse)
 theme_set(theme_bw())
@@ -13,15 +13,14 @@ theme_update(legend.position = "bottom")
 set.seed(1)
 ```
 
-## simple funtion
+### simple funtion
 ```{r computing z score}
 x = rnorm(25)
 
 mean(x)/sd(x)
 ```
 
-Build a function for this.
-
+### Build a function for this.
 ```{r building function for z score}
 z_score <- function(x) {
   z = mean(x)/sd(x)
@@ -39,7 +38,7 @@ z_score(runif(20,0,1))
 z_score(c(TRUE, TRUE, FALSE, TRUE))
 ```
 
-## Add some control statement
+### Add some control statement
 ```{r control statements}
 z_score <- function(x) {
   
@@ -58,7 +57,7 @@ z_score <- function(x) {
 z_score(rnorm(2))
 ```
 
-## Output mean and sd as well
+### Output mean and sd as well
 ```{r adding output}
 z_score <- function(x) {
   
@@ -79,4 +78,42 @@ z_score <- function(x) {
 
 ```{r}
 z_score(rnorm(25))
+```
+
+### Simple linear regression 
+```{r simple linear regression}
+sim_data = tibble(
+  x = runif(30),
+  y = 2 + 3 * x + rnorm(30, 0, 1)
+)
+
+ggplot(sim_data, aes(x = x, y = y)) + 
+  geom_point()
+
+ls_fit = lm(y ~ x, data = sim_data)
+  
+beta0_hat = coef(ls_fit)[1]
+beta1_hat = coef(ls_fit)[2]
+```
+
+### Build a funtion for the linear regression
+```{r function for linear regression}
+sim_regression <- function(n, beta0, beta1) {
+  sim_data = tibble(
+  x = runif(n),
+  y = beta0 + beta1 * x + rnorm(n, 0, 1)
+)
+
+  ls_fit = lm(y ~ x, data = sim_data)
+  
+  tibble(
+    beta0_hat = coef(ls_fit)[1],
+    beta1_hat = coef(ls_fit)[2])
+}
+```
+
+```{r plug values}
+sim_regression(50,2,3)
+
+sim_regression(2000,2,3)
 ```
