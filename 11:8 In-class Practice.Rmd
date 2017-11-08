@@ -7,6 +7,8 @@ output: html_document
 ### loading packages
 ```{r}
 library(tidyverse)
+library(readxl)
+library(janitor)
 theme_set(theme_bw())
 theme_update(legend.position = "bottom")
 
@@ -117,3 +119,45 @@ sim_regression(50,2,3)
 
 sim_regression(2000,2,3)
 ```
+
+
+### LoTR data
+```{r}
+fellowship_ring = read_excel("./data/LotR_Words.xlsx", range = "B3:D6") %>%
+  clean_names() %>%
+  gather(key = sex, value = words, female:male) %>%
+  mutate(race = tolower(race),
+         movie = "Fellowship")
+
+two_towers = read_excel("./data/LotR_Words.xlsx", range = "F3:H6") %>%
+  clean_names() %>%
+  gather(key = sex, value = words, female:male) %>%
+  mutate(race = tolower(race),
+         movie = "Two Towers")
+
+return_king = read_excel("./data/LotR_Words.xlsx", range = "J3:L6") %>%
+  clean_names() %>%
+  gather(key = sex, value = words, female:male) %>%
+  mutate(race = tolower(race),
+         movie = "Return")
+```
+
+### Build a function for the data extract
+```{r building function to tidy dataset}
+LoTR.data <- function(path, movie.name, cell_range) {
+  df <- read_excel(path, range = cell_range) %>%
+    clean_names() %>%
+    gather(key = sex, value = words, female:male) %>%
+    mutate(race = tolower(race),
+         movie = movie.name)
+  
+  df
+}
+
+bind_rows(
+  LoTR.data("./data/LotR_Words.xlsx", "Fellowship", "B3:D6"),
+  LoTR.data("./data/LotR_Words.xlsx", "Two Towers", "F3:H6"),
+  LoTR.data("./data/LotR_Words.xlsx", "Return", "J3:L6")
+)
+```
+
