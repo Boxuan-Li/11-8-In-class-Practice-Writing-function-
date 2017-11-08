@@ -4,4 +4,79 @@ author: "Boxuan Li"
 date: "11/8/2017"
 output: html_document
 ---
+## loading packages
+```{r}
+library(tidyverse)
+theme_set(theme_bw())
+theme_update(legend.position = "bottom")
 
+set.seed(1)
+```
+
+## simple funtion
+```{r computing z score}
+x = rnorm(25)
+
+mean(x)/sd(x)
+```
+
+Build a function for this.
+
+```{r building function for z score}
+z_score <- function(x) {
+  z = mean(x)/sd(x)
+  
+  z #return item (can also be writen as return(z))
+}
+```
+
+```{r pluging the values into the function}
+# Note that it has to be a vector indicating values to be pluged into the function.
+z_score(runif(20,0,1))
+
+# or
+
+z_score(c(TRUE, TRUE, FALSE, TRUE))
+```
+
+## Add some control statement
+```{r control statements}
+z_score <- function(x) {
+  
+  if (!is.numeric(x)) {
+    stop("x must be numeric!")
+  } else if (length(x) < 3) {
+    stop("x must have 3 or more entries")
+  }
+  z = mean(x)/sd(x)
+  
+  z
+}
+```
+
+```{r}
+z_score(rnorm(2))
+```
+
+## Output mean and sd as well
+```{r adding output}
+z_score <- function(x) {
+  
+  if (!is.numeric(x)) {
+    stop("x must be numeric!")
+  } else if (length(x) < 3) {
+    stop("x must have 3 or more entries")
+  }
+  mean <- mean(x)
+  sd <- sd(x)
+  z <- mean/sd
+  
+  data_frame(mean,
+             sd,
+             z)
+}
+```
+
+```{r}
+z_score(rnorm(25))
+```
